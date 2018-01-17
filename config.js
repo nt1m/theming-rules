@@ -1,3 +1,13 @@
+// Check the rules every 5 minutes
+const CHECK_PERIODICALLY = true;
+
+// Check the rules on every tab update/switch
+const CHECK_ON_TAB_CHANGE = true;
+
+// The default theme: used when no rule is matched
+const DEFAULT_THEME = "light";
+
+// The theming rules: priority is given to the bottom-most rule,
 const RULES = [
   ["privatebrowsing", "dark"],
   ["(hour > 20) || (hour < 9)", "dark"],
@@ -5,8 +15,7 @@ const RULES = [
   ["protocol == 'https:'", "dark"],
 ];
 
-const DEFAULT_THEME = "light";
-
+// The theme list
 const THEMES = {
   light: {
     images: {

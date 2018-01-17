@@ -3,7 +3,7 @@
   "name": "Context theming",
   "version": "1.0",
   "description": "Demo of how to make context theming",
-  "permissions": ["theme", "tabs", "contextualIdentities", "<all_urls>"],
+  "permissions": ["theme", "alarms", "tabs", "contextualIdentities", "<all_urls>"],
   "background": {
     "scripts": [
       "config.js",
@@ -11,7 +11,6 @@
       "background/esprima.js",
       "background/rule-manager.js",
       "background/rule-parser.js",
-      "background/tab-manager.js",
       "background/background.js"
     ]
   }

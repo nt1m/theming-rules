@@ -4,23 +4,44 @@ async function setThemeFromRules(tab) {
 }
 
 async function init() {
+  await setAllWindows();
+  if (CHECK_ON_TAB_CHANGE) {
+    setupTabListeners();
+  }
+  if (CHECK_PERIODICALLY) {
+    setupAlarmListener();
+  }
+}
+
+async function setAllWindows() {
   let wins = await browser.windows.getAll();
+
   wins.forEach(async win => {
     let [tab] = await browser.tabs.query({ active: true, windowId: win.id });
     setThemeFromRules(tab);
   });
-  new TabManager({
-    onSelectionChanged: async (tab) => {
-      setThemeFromRules(tab);
-    },
-    onUpdated: async (tab, changeInfo) => {
-      if (!changeInfo.url) {
-        return;
-      }
+}
+
+function setupTabListeners() {
+  chrome.tabs.onActivated.addListener(async function({ tabId }) {
+    let tab = await browser.tabs.get(tabId);
+    setThemeFromRules(tab);
+  });
+
+  chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
+    if (!changeInfo.url) {
+      return;
+    }
+    if (tab.active) {
       setThemeFromRules(tab);
     }
   });
 }
 
-window.onload = () => setTimeout(init, 1000);
+function setupAlarmListener() {
+  browser.alarms.onAlarm.addListener(setAllWindows);
+  browser.alarms.create('checkTime', {periodInMinutes: 5});
+}
+
+window.onload = init;
 
