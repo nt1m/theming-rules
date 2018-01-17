@@ -1,0 +1,58 @@
+function evalRule(tree, context) {
+  switch (tree.type) {
+    case "ExpressionStatement":
+      return evalRule(tree.expression, context);
+    case "BinaryExpression":
+    case "LogicalExpression": {
+      let left = evalRule(tree.left, context);
+      let right = evalRule(tree.right, context);
+      switch (tree.operator) {
+        case "&&":
+          return left && right;
+        case "||":
+          return left || right;
+        case "<":
+          return left < right;
+        case ">":
+          return left > right;
+        case "<=":
+          return left <= right;
+        case ">=":
+          return left >= right;
+        case "==":
+          return left == right;
+      }
+    }
+    case "UnaryExpression":
+      return tree.operator === "!" ? !evalRule(tree.argument, context) : evalRule(tree.argument, context);
+    case "Identifier":
+      return context[tree.name];
+    case "Literal":
+      return typeof(tree.value) === "number" ?
+          Number(tree.value)
+        : String(tree.value.replace(/(^["'])|(["']$)/g, ""));
+    case "String":
+      return tree.name;
+    default:
+      return false;
+  }
+}
+
+class Rule {
+  constructor(string) {
+    this.rule = string;
+  }
+
+  async getContext(tab) {
+    let object = {};
+    let keys = Object.keys(PROPERTIES).filter(k => this.rule.includes(k));
+    for (let key of keys) {
+      object[key] = await PROPERTIES[key].get(tab);
+    }
+    return object;
+  }
+
+  async applies(tab) {
+    return evalRule(esprima.parse(this.rule).body[0], await this.getContext(tab));
+  }
+}
