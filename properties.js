@@ -4,6 +4,13 @@
  */
 
 const PROPERTIES = {
+  inactive_window: {
+    type: "boolean",
+    async get(tab) {
+      let win = await browser.windows.get(tab.windowId);
+      return win.focused;
+    }
+  },
   privatebrowsing: {
     type: "boolean",
     async get(tab) {

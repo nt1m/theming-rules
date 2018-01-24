@@ -4,20 +4,17 @@ const CHECK_PERIODICALLY = true;
 // Check the rules on every tab update/switch
 const CHECK_ON_TAB_CHANGE = true;
 
-// The default theme: used when no rule is matched
-const DEFAULT_THEME = "light";
+// The default theme
+const DEFAULT_THEME = "bright";
 
-// The theming rules: priority is given to the bottom-most rule,
+// The theming rules: priority is given to the bottom-most rule.
 const RULES = [
-  ["privatebrowsing", "dark"],
-  ["(hour > 20) || (hour < 9)", "dark"],
-  ["protocol == 'http:'", "light"],
-  ["protocol == 'https:'", "dark"],
+  ["privatebrowsing", "shady"],
+  ["(hour > 20) || (hour < 9)", "shady"]
 ];
 
-// The theme list
 const THEMES = {
-  light: {
+  bright: {
     images: {
       headerURL: ""
     },
@@ -28,7 +25,7 @@ const THEMES = {
       toolbar: "#f8f8f8",
     }
   },
-  dark: {
+  shady: {
     images: {
       headerURL: ""
     },
